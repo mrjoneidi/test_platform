@@ -1,0 +1,55 @@
+{
+  "ingestion": {
+    "source_type": "web",
+    "supported_formats": ["pdf", "html", "md"],
+    "max_depth": 2,
+    "use_ocr": true,
+    "clean_text": true
+  },
+  "chunking": {
+    "strategy": "semantic",
+    "chunk_size": 1024,
+    "chunk_overlap": 100,
+    "separator_priority": ["\\n\\n", "\\n", ".", " "]
+  },
+  "embedding": {
+    "model": "embeddinggemma-2",
+    "dimensions": 768,
+    "batch_size": 64
+  },
+  "vdb": {
+    "provider": "pgvector",
+    "collection_name": "tenant_123_docs",
+    "similarity_metric": "cosine",
+    "m": 24,
+    "ef_construction": 200,
+    "ef_search": 128
+  },
+  "retrieval": {
+    "search_mode": "hybrid",
+    "alpha": 0.7,
+    "top_k": 20,
+    "score_threshold": 0.8,
+    "use_reranker": true,
+    "rerank_top_n": 5,
+    "parent_child_retrieval": true
+  },
+  "llm": {
+    "provider": "vllm",
+    "model": "Qwen2.5-Coder-14B-Instruct",
+    "context_window": 32000,
+    "temperature": 0.4,
+    "top_p": 0.95,
+    "max_tokens": 2048,
+    "presence_penalty": 0.1,
+    "frequency_penalty": 0.1,
+    "stop_sequences": ["<|endoftext|>"],
+    "system_prompt_template": "You are an expert engineer. Use the following context: {{context}}\\n\\nChat History: {{chat_history}}",
+    "citation_mode": "json"
+  },
+  "memory": {
+    "strategy": "summary",
+    "window_size": 10,
+    "query_rewriting": true
+  }
+}
